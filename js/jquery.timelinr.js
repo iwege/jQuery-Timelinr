@@ -1,3 +1,4 @@
+(function($){
 /* ----------------------------------
 jQuery Timelinr 0.9.5
 tested with jQuery v1.6+
@@ -9,164 +10,126 @@ http://www.opensource.org/licenses/mit-license.php
 instructions: http://www.csslab.cl/2011/08/18/jquery-timelinr/
 ---------------------------------- */
 
-jQuery.fn.timelinr = function(options){
+$.fn.timelinr = function(options){
+	var $this = this;
 	// default plugin settings
-	settings = jQuery.extend({
+	var s = $.extend({
 		orientation: 				'horizontal',		// value: horizontal | vertical, default to horizontal
-		containerDiv: 				'.timeline',		// value: any HTML tag or #id, default to #timeline
-		datesDiv: 					'.dates',			// value: any HTML tag or #id, default to #dates
+		container: 					'.timeline',		// value: any HTML tag or #id, default to #timeline
+		dates: 						'.dates',			// value: any HTML tag or #id, default to #dates
 		datesSelectedClass: 		'selected',			// value: any class, default to selected
-		datesSpeed: 				'normal',			// value: integer between 100 and 1000 (recommended) or 'slow', 'normal' or 'fast'; default to normal
-		issuesDiv: 					'.issues',			// value: any HTML tag or #id, default to #issues
+		datesSpeed: 				500,			// value: integer between 100 and 1000 (recommended) or 'slow', 'normal' or 'fast'; default to normal
+		issues: 					'.issues',			// value: any HTML tag or #id, default to #issues
 		issuesSelectedClass: 		'selected',			// value: any class, default to selected
 		issuesSpeed: 				'fast',				// value: integer between 100 and 1000 (recommended) or 'slow', 'normal' or 'fast'; default to fast
 		issuesTransparency: 		0.2,				// value: integer between 0 and 1 (recommended), default to 0.2
 		issuesTransparencySpeed: 	500,				// value: integer between 100 and 1000 (recommended), default to 500 (normal)
-		prevButton: 				'.prev',			// value: any HTML tag or #id, default to #prev
-		nextButton: 				'.next',			// value: any HTML tag or #id, default to #next
-		arrowKeys: 					'false',			// value: true | false, default to false
-		startAt: 					1,					// value: integer, default to 1 (first)
-		autoPlay: 					'false',			// value: true | false, default to false
-		autoPlayDirection: 			'forward',			// value: forward | backward, default to forward
-		autoPlayPause: 				2000				// value: integer (1000 = 1 seg), default to 2000 (2segs)
+		startAt: 					1,					// value: integer, default to 1 (first)			// value: integer (1000 = 1 seg), default to 2000 (2segs)
 		
 	}, options);
+	var $dates  = $this.find(s.dates);
+	var $dateList = $dates.find('li');
+	var $issues = $this.find(s.issues);
+	var $issueList = $issues.find('li');
+	var $container = $this;
 
-	$(function(){
-		// setting variables... many of them
-		var howManyDates = $(settings.datesDiv+' li').length;
-		var howManyIssues = $(settings.issuesDiv+' li').length;
-		var currentDate = $(settings.datesDiv).find('a.'+settings.datesSelectedClass);
-		var currentIssue = $(settings.issuesDiv).find('li.'+settings.issuesSelectedClass);
-		var widthContainer = $(settings.containerDiv).width();
-		var heightContainer = $(settings.containerDiv).height();
-		var widthIssues = $(settings.issuesDiv).width();
-		var heightIssues = $(settings.issuesDiv).height();
-		var widthIssue = $(settings.issuesDiv+' li').width();
-		var heightIssue = $(settings.issuesDiv+' li').height();
-		var widthDates = $(settings.datesDiv).width();
-		var heightDates = $(settings.datesDiv).height();
-		var widthDate = $(settings.datesDiv+' li').width();
-		var heightDate = $(settings.datesDiv+' li').height();
-		
-		// set positions!
-		if(settings.orientation == 'horizontal') {	
-			$(settings.issuesDiv).width(widthIssue*howManyIssues);
-			$(settings.datesDiv).width(widthDate*howManyDates).css('marginLeft',widthContainer/2-widthDate/2);
-			var defaultPositionDates = parseInt($(settings.datesDiv).css('marginLeft').substring(0,$(settings.datesDiv).css('marginLeft').indexOf('px')));
-		} else if(settings.orientation == 'vertical') {
-			$(settings.issuesDiv).height(heightIssue*howManyIssues);
-			$(settings.datesDiv).height(heightDate*howManyDates).css('marginTop',heightContainer/2-heightDate/2);
-			var defaultPositionDates = parseInt($(settings.datesDiv).css('marginTop').substring(0,$(settings.datesDiv).css('marginTop').indexOf('px')));
-		}
-		
-		$(settings.datesDiv+' a').click(function(event){
-			event.preventDefault();
-			// first vars
-			var whichIssue = $(this).text();
-			var currentIndex = $(this).parent().prevAll().length;
+	var c = {};
+	// setting variables... many of them
+	var numbers = {};
+	var selected = {};
 
-			// moving the elements
-			if(settings.orientation == 'horizontal') {
-				$(settings.issuesDiv).animate({'marginLeft':-widthIssue*currentIndex},{queue:false, duration:settings.issuesSpeed});
-			} else if(settings.orientation == 'vertical') {
-				$(settings.issuesDiv).animate({'marginTop':-heightIssue*currentIndex},{queue:false, duration:settings.issuesSpeed});
-			}
-			$(settings.issuesDiv+' li').animate({'opacity':settings.issuesTransparency},{queue:false, duration:settings.issuesSpeed}).removeClass(settings.issuesSelectedClass).eq(currentIndex).addClass(settings.issuesSelectedClass).fadeTo(settings.issuesTransparencySpeed,1);
+	numbers.date = $dateList.length;
+	numbers.issue = $issueList.length
+	selected.date = $dates.find('a.'+s.datesSelectedClass);
+	selected.issue= $issues.find('li.'+s.issuesSelectedClass);
+	c.container = {width:$container.width(),
+					height:$container.height()};
+	c.issues= {width:$issues.width(),height:$issues.height()};
+	c.issueList = {width:$issueList.width(),height:$issueList.height()};
+	c.dates = {width:$dates.width(),height:$dates.height()};
+	c.dateList = {width:$dateList.width(),height:$dateList.height()}
+	var attr = s.orientation == 'horizontal'? 'width':'height';
+	var defaultPositionDates,currentIndex;
+	//  初始化当前的 DOM
+	//  
+	function init(){
+		// get dates and issues length
+		c.issues[attr] = c.issues[attr]*numbers.issue;
+		c.dates[attr] = c.dateList[attr]*numbers.date;
+		// set dates and issues attr length
+		$issues[attr](c.issues[attr]);
+		$dates[attr](c.dates[attr]);
+		// set initial position
+		$dates.css(getTransform(c.dates[attr]));
+		$issues.css(getTransform(c.issues[attr]));
+
+		// set position;
+		setTimeout(function(){
+			$issues.css({'-webkit-transition':'-webkit-transform ease '+s.datesSpeed+'ms,opacity ease '+ s.datesSpeed+'ms'});
+			$dates.css({'-webkit-transition':'-webkit-transform ease '+s.datesSpeed+'ms'})
+					.css(getTransform(c.dates[attr]/2-c.container[attr]/2));
 			
-			// now moving the dates
-			$(settings.datesDiv+' a').removeClass(settings.datesSelectedClass);
-			$(this).addClass(settings.datesSelectedClass);
-			if(settings.orientation == 'horizontal') {
-				$(settings.datesDiv).animate({'marginLeft':defaultPositionDates-(widthDate*currentIndex)},{queue:false, duration:'settings.datesSpeed'});
-			} else if(settings.orientation == 'vertical') {
-				$(settings.datesDiv).animate({'marginTop':defaultPositionDates-(heightDate*currentIndex)},{queue:false, duration:'settings.datesSpeed'});
-			}
-		});
+			$dateList.eq(s.startAt-1).find('a').trigger('click');
+		},100);
 
-		$(settings.nextButton).bind('click', function(event){
-			event.preventDefault();
-			if(settings.orientation == 'horizontal') {
-				var currentPositionIssues = parseInt($(settings.issuesDiv).css('marginLeft').substring(0,$(settings.issuesDiv).css('marginLeft').indexOf('px')));
-				var currentIssueIndex = currentPositionIssues/widthIssue;
-				var currentPositionDates = parseInt($(settings.datesDiv).css('marginLeft').substring(0,$(settings.datesDiv).css('marginLeft').indexOf('px')));
-				var currentIssueDate = currentPositionDates-widthDate;
-				if(currentPositionIssues <= -(widthIssue*howManyIssues-(widthIssue))) {
-					$(settings.issuesDiv).stop();
-					$(settings.datesDiv+' li:last-child a').click();
-				} else {
-					if (!$(settings.issuesDiv).is(':animated')) {
-						$(settings.issuesDiv).animate({'marginLeft':currentPositionIssues-widthIssue},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li').animate({'opacity':settings.issuesTransparency},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li.'+settings.issuesSelectedClass).removeClass(settings.issuesSelectedClass).next().fadeTo(settings.issuesTransparencySpeed, 1).addClass(settings.issuesSelectedClass);
-						$(settings.datesDiv).animate({'marginLeft':currentIssueDate},{queue:false, duration:'settings.datesSpeed'});
-						$(settings.datesDiv+' a.'+settings.datesSelectedClass).removeClass(settings.datesSelectedClass).parent().next().children().addClass(settings.datesSelectedClass);
-					}
-				}
-			} else if(settings.orientation == 'vertical') {
-				var currentPositionIssues = parseInt($(settings.issuesDiv).css('marginTop').substring(0,$(settings.issuesDiv).css('marginTop').indexOf('px')));
-				var currentIssueIndex = currentPositionIssues/heightIssue;
-				var currentPositionDates = parseInt($(settings.datesDiv).css('marginTop').substring(0,$(settings.datesDiv).css('marginTop').indexOf('px')));
-				var currentIssueDate = currentPositionDates-heightDate;
-				if(currentPositionIssues <= -(heightIssue*howManyIssues-(heightIssue))) {
-					$(settings.issuesDiv).stop();
-					$(settings.datesDiv+' li:last-child a').click();
-				} else {
-					if (!$(settings.issuesDiv).is(':animated')) {
-						$(settings.issuesDiv).animate({'marginTop':currentPositionIssues-heightIssue},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li').animate({'opacity':settings.issuesTransparency},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li.'+settings.issuesSelectedClass).removeClass(settings.issuesSelectedClass).next().fadeTo(settings.issuesTransparencySpeed, 1).addClass(settings.issuesSelectedClass);
-						$(settings.datesDiv).animate({'marginTop':currentIssueDate},{queue:false, duration:'settings.datesSpeed'});
-						$(settings.datesDiv+' a.'+settings.datesSelectedClass).removeClass(settings.datesSelectedClass).parent().next().children().addClass(settings.datesSelectedClass);
-					}
-				}
-			}
-		});
+		defaultPositionDates = c.dates[attr]/2-c.container[attr]/2;
+	}
 
-		$(settings.prevButton).click(function(event){
-			event.preventDefault();
-			if(settings.orientation == 'horizontal') {
-				var currentPositionIssues = parseInt($(settings.issuesDiv).css('marginLeft').substring(0,$(settings.issuesDiv).css('marginLeft').indexOf('px')));
-				var currentIssueIndex = currentPositionIssues/widthIssue;
-				var currentPositionDates = parseInt($(settings.datesDiv).css('marginLeft').substring(0,$(settings.datesDiv).css('marginLeft').indexOf('px')));
-				var currentIssueDate = currentPositionDates+widthDate;
-				if(currentPositionIssues >= 0) {
-					$(settings.issuesDiv).stop();
-					$(settings.datesDiv+' li:first-child a').click();
-				} else {
-					if (!$(settings.issuesDiv).is(':animated')) {
-						$(settings.issuesDiv).animate({'marginLeft':currentPositionIssues+widthIssue},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li').animate({'opacity':settings.issuesTransparency},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li.'+settings.issuesSelectedClass).removeClass(settings.issuesSelectedClass).prev().fadeTo(settings.issuesTransparencySpeed, 1).addClass(settings.issuesSelectedClass);
-						$(settings.datesDiv).animate({'marginLeft':currentIssueDate},{queue:false, duration:'settings.datesSpeed'});
-						$(settings.datesDiv+' a.'+settings.datesSelectedClass).removeClass(settings.datesSelectedClass).parent().prev().children().addClass(settings.datesSelectedClass);
-					}
-				}
-			} else if(settings.orientation == 'vertical') {
-				var currentPositionIssues = parseInt($(settings.issuesDiv).css('marginTop').substring(0,$(settings.issuesDiv).css('marginTop').indexOf('px')));
-				var currentIssueIndex = currentPositionIssues/heightIssue;
-				var currentPositionDates = parseInt($(settings.datesDiv).css('marginTop').substring(0,$(settings.datesDiv).css('marginTop').indexOf('px')));
-				var currentIssueDate = currentPositionDates+heightDate;
-				if(currentPositionIssues >= 0) {
-					$(settings.issuesDiv).stop();
-					$(settings.datesDiv+' li:first-child a').click();
-				} else {
-					if (!$(settings.issuesDiv).is(':animated')) {
-						$(settings.issuesDiv).animate({'marginTop':currentPositionIssues+heightIssue},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li').animate({'opacity':settings.issuesTransparency},{queue:false, duration:settings.issuesSpeed});
-						$(settings.issuesDiv+' li.'+settings.issuesSelectedClass).removeClass(settings.issuesSelectedClass).prev().fadeTo(settings.issuesTransparencySpeed, 1).addClass(settings.issuesSelectedClass);
-						$(settings.datesDiv).animate({'marginTop':currentIssueDate},{queue:false, duration:'settings.datesSpeed'},{queue:false, duration:settings.issuesSpeed});
-						$(settings.datesDiv+' a.'+settings.datesSelectedClass).removeClass(settings.datesSelectedClass).parent().prev().children().addClass(settings.datesSelectedClass);
-					}
-				}
-			}
-		});
-		
+	function getTransform(number){
+		if (s.orientation == 'horizontal') {
+			return {'-webkit-transform':'translate3d('+number+'px,0,0)'};
+			
+		}
+		return {'-webkit-transform':'translate3d(0,'+number+'px,0)'};
+	}
 
+
+
+	
+	$dates.find('a').on('click',function(event){
+		event.preventDefault();
+		var $this = $(this);
+
+		// first vars
+		var whichIssue = this.dataset.target || this.text();
+
+		currentIndex = $dateList.index($this.parent());
+		// moving the elements
+
+		$issues.css(getTransform(-c.issueList[attr]*currentIndex));
+		$issueList.css({'opacity':s.issuesTransparency})
+					.removeClass(s.issuesSelectedClass)
+					.eq(currentIndex)
+						.addClass(s.issuesSelectedClass)
+						.fadeTo(s.issuesTransparencySpeed,1);
 		
-		// default position startAt, added since 0.9.3
-		$(settings.datesDiv+' li').eq(settings.startAt-1).find('a').trigger('click');
-		
+		// now moving the dates
+		$dateList.removeClass(s.datesSelectedClass);
+		$this.parent().addClass(s.datesSelectedClass);
+		$dates.css(getTransform(defaultPositionDates - (c.dateList[attr]*currentIndex)));
+	
 	});
+	$container.find('a.button').on('click',function(event){
+		event.preventDefault();
+		event.stopPropagation();
+		var action = this.dataset.action;
+		var click = 0;
+		if (action == 'next' && currentIndex != $dateList.length -1) {
+			currentIndex += 1;
+			click = 1;
+		}
 
+		if (action == 'prev' && currentIndex != 0) {
+			currentIndex -= 1;
+			click = 1;
+		}
+
+		click && $dateList.eq(currentIndex).find('a').click();
+	})
+	
+	
+	init();
+	
 };
+})($);
+

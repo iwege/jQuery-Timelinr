@@ -11,8 +11,6 @@
 		$(function(){
 			$('#timeline').timelinr({
 				orientation: 	'vertical',
-				issuesSpeed: 	300,
-				datesSpeed: 	100,
 				arrowKeys: 		'true',
 				startAt:		3
 			})
@@ -25,64 +23,64 @@
 	<div id="timeline">
 		<div class="timeline">
 		<ul class="dates">
-			<li><a href="#1900" class="selected">1900</a></li>
-			<li><a href="#1930">1930</a></li>
-			<li><a href="#1944">1944</a></li>
-			<li><a href="#1950">1950</a></li>
-			<li><a href="#1971">1971</a></li>
-			<li><a href="#1977">1977</a></li>
-			<li><a href="#1989">1989</a></li>
-			<li><a href="#1999">1999</a></li>
-			<li><a href="#2001">2001</a></li>
-			<li><a href="#2011">2011</a></li>
+			<li class="selected" ><a href="#1900" data-target="1900" >1900</a></li>
+			<li><a href="#1930" data-target="1930">1930</a></li>
+			<li><a href="#1944" data-target="1944">1944</a></li>
+			<li><a href="#1950" data-target="1950">1950</a></li>
+			<li><a href="#1971" data-target="1971">1971</a></li>
+			<li><a href="#1977" data-target="1977">1977</a></li>
+			<li><a href="#1989" data-target="1989">1989</a></li>
+			<li><a href="#1999" data-target="1999">1999</a></li>
+			<li><a href="#2001" data-target="2001">2001</a></li>
+			<li><a href="#2011" data-target="2011">2011</a></li>
 		</ul>
 		<ul class="issues">
-			<li data-tag="1900" class="selected">
+			<li data-issue="1900" class="selected">
 				<img src="images/1.png" width="256" height="256" />
 				<h1>1900</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="1930">
+			<li data-issue="1930">
 				<img src="images/2.png" width="256" height="256" />
 				<h1>1930</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="1944">
+			<li data-issue="1944">
 				<img src="images/3.png" width="256" height="256" />
 				<h1>1944</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="1950">
+			<li data-issue="1950">
 				<img src="images/4.png" width="256" height="256" />
 				<h1>1950</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="1971">
+			<li data-issue="1971">
 				<img src="images/5.png" width="256" height="256" />
 				<h1>1971</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="1977">
+			<li data-issue="1977">
 				<img src="images/6.png" width="256" height="256" />
 				<h1>1977</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="1989">
+			<li data-issue="1989">
 				<img src="images/7.png" width="256" height="256" />
 				<h1>1989</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="1999">
+			<li data-issue="1999">
 				<img src="images/8.png" width="256" height="256" />
 				<h1>1999</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="2001">
+			<li data-issue="2001">
 				<img src="images/9.png" width="256" height="256" />
 				<h1>2001</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
 			</li>
-			<li data-tag="2011">
+			<li data-issue="2011">
 				<img src="images/10.png" width="256" height="256" />
 				<h1>2011</h1>
 				<p>Donec semper quam scelerisque tortor dictum gravida. In hac habitasse platea dictumst. Nam pulvinar, odio sed rhoncus suscipit, sem diam ultrices mauris, eu consequat purus metus eu velit. Proin metus odio, aliquam eget molestie nec, gravida ut sapien. Phasellus quis est sed turpis sollicitudin venenatis sed eu odio. Praesent eget neque eu eros interdum malesuada non vel leo. Sed fringilla porta ligula.</p>
@@ -90,8 +88,8 @@
 		</ul>
 		<div id="grad_top"></div>
 		<div id="grad_bottom"></div>
-		<a href="#" class="next">+</a>
-		<a href="#" class="prev">-</a>
+		<a href="#" class="next button" data-action="next">+</a>
+		<a href="#" class="prev button" data-action="prev">-</a>
 	</div>
 	</div>
 	

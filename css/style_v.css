@@ -20,7 +20,7 @@ a {
 	transition: 0.5s;
 }
 	a:hover,
-	a.selected {
+	li.selected a {
 		color: #ffcc00;
 	}
 
@@ -69,6 +69,7 @@ h1,h2,h4,h5,h6 {
 					padding-bottom: 10px;
 				}
 				.dates .selected {
+				/*	-webkit-transform:font-size ease 500ms;*/
 			        font-size: 38px;
 				}
 		
@@ -77,6 +78,7 @@ h1,h2,h4,h5,h6 {
 			height: 600px;
 			overflow: hidden;
 			float: left;
+
 		}	
 			.issues li {
 				width: 400px;
