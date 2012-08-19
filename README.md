@@ -15,33 +15,33 @@ Configuration:
 Include the jQuery library and this plugin:
 
 	<script src="js/jquery-1.6.1.min.js"></script>
-	<script src="js/jquery.timelinr-0.9.js"></script>
+	<script src="js/jquery.timelinr.js"></script>
 
 Inicialize-it with the default parameters:
 
 	$(function(){
-   		$().timelinr();
+   		$("#timeline").timelinr();
 	});
 
 Or configure it as preferred:
 
 	$(function(){
-		$().timelinr({
+		$('#timeline').timelinr({
 			orientation: 'horizontal',
 			// value: horizontal | vertical, default to horizontal
-			containerDiv: '#timeline',
+	
 			// value: any HTML tag or #id, default to #timeline
-			datesDiv: '#dates',
+			datesDiv: '.dates',
 			// value: any HTML tag or #id, default to #dates
 			datesSelectedClass: 'selected',
 			// value: any class, default to selected
 			datesSpeed: 'normal',
 			// value: integer between 100 and 1000 (recommended) or 'slow', 'normal' or 'fast'; default to normal
-			issuesDiv : '#issues',
+			issuesDiv : '.issues',
 			// value: any HTML tag or #id, default to #issues
 			issuesSelectedClass: 'selected',
 			// value: any class, default to selected
-			issuesSpeed: 'fast',
+			issuesSpeed:100,
 			// value: integer between 100 and 1000 (recommended) or 'slow', 'normal' or 'fast'; default to fast
 			issuesTransparency: 0.2,
 			// value: integer between 0 and 1 (recommended), default to 0.2
@@ -55,26 +55,20 @@ Or configure it as preferred:
 			// value: true/false, default to false
 			startAt: 1,
 			// value: integer, default to 1 (first)
-			autoPlay: 'false',
-			// value: true | false, default to false
-			autoPlayDirection: 'forward',
-			// value: forward | backward, default to forward
-			autoPlayPause: 2000
-			// value: integer (1000 = 1 seg), default to 2000 (2segs)< });
 	});
 
 HTML markup must be as follows:
 
 	<div id="timeline">
-	   <ul id="dates">
-	      <li><a href="#">date1</a></li>
-	      <li><a href="#">date2</a></li>
+	   <ul class="dates">
+	      <li><a href="#" >date1</a></li>
+	      <li><a href="#" >date2</a></li>
 	   </ul>
-	   <ul id="issues">
-	      <li id="date1">
+	   <ul class="issues">
+	      <li>
 	         <p>Lorem ipsum.</p>
 	      </li>
-	      <li id="date2">
+	      <li>
 	         <p>Lorem ipsum.</p>
 	      </li>
 	   </ul>

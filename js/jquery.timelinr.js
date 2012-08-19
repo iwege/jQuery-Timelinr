@@ -1,7 +1,7 @@
 (function($){
 /* ----------------------------------
-jQuery Timelinr 0.9.5
-tested with jQuery v1.6+
+jQuery Timelinr 0.9.7
+tested with jQuery v1.8
 
 Copyright 2011, CSSLab.cl
 Free under the MIT license.
@@ -17,10 +17,9 @@ $.fn.timelinr = function(options){
 		orientation: 				'horizontal',		// value: horizontal | vertical, default to horizontal
 		container: 					'.timeline',		// value: any HTML tag or #id, default to #timeline
 		dates: 						'.dates',			// value: any HTML tag or #id, default to #dates
-		datesSelectedClass: 		'selected',			// value: any class, default to selected
+		selectedClass: 				'selected',			// value: any class, default to selected
 		datesSpeed: 				500,			// value: integer between 100 and 1000 (recommended) or 'slow', 'normal' or 'fast'; default to normal
 		issues: 					'.issues',			// value: any HTML tag or #id, default to #issues
-		issuesSelectedClass: 		'selected',			// value: any class, default to selected
 		issuesSpeed: 				'fast',				// value: integer between 100 and 1000 (recommended) or 'slow', 'normal' or 'fast'; default to fast
 		issuesTransparency: 		0.2,				// value: integer between 0 and 1 (recommended), default to 0.2
 		issuesTransparencySpeed: 	500,				// value: integer between 100 and 1000 (recommended), default to 500 (normal)
@@ -36,43 +35,39 @@ $.fn.timelinr = function(options){
 	var c = {};
 	// setting variables... many of them
 	var numbers = {};
-	var selected = {};
-
 	numbers.date = $dateList.length;
 	numbers.issue = $issueList.length
-	selected.date = $dates.find('a.'+s.datesSelectedClass);
-	selected.issue= $issues.find('li.'+s.issuesSelectedClass);
-	c.container = {width:$container.width(),
-					height:$container.height()};
-	c.issues= {width:$issues.width(),height:$issues.height()};
-	c.issueList = {width:$issueList.width(),height:$issueList.height()};
-	c.dates = {width:$dates.width(),height:$dates.height()};
-	c.dateList = {width:$dateList.width(),height:$dateList.height()}
+	c.container = 	{ width : $container.width(),	height : $container.height()};
+	c.issues= 		{ width : $issues.width(),		height : $issues.height()};
+	c.issueList = 	{ width : $issueList.width(),	height : $issueList.height()};
+	c.dates = 		{ width : $dates.width(),		height : $dates.height()};
+	c.dateList = 	{ width : $dateList.width(),	height : $dateList.height()}
 	var attr = s.orientation == 'horizontal'? 'width':'height';
 	var defaultPositionDates,currentIndex;
 	//  初始化当前的 DOM
 	//  
 	function init(){
+		
 		// get dates and issues length
 		c.issues[attr] = c.issues[attr]*numbers.issue;
 		c.dates[attr] = c.dateList[attr]*numbers.date;
+		
 		// set dates and issues attr length
 		$issues[attr](c.issues[attr]);
 		$dates[attr](c.dates[attr]);
+		
 		// set initial position
-		$dates.css(getTransform(c.dates[attr]));
-		$issues.css(getTransform(c.issues[attr]));
+		$dates.css(getTransform(c.dates[attr]/2-c.container[attr]/2));
+		
 
 		// set position;
 		setTimeout(function(){
 			$issues.css({'-webkit-transition':'-webkit-transform ease '+s.datesSpeed+'ms,opacity ease '+ s.datesSpeed+'ms'});
-			$dates.css({'-webkit-transition':'-webkit-transform ease '+s.datesSpeed+'ms'})
-					.css(getTransform(c.dates[attr]/2-c.container[attr]/2));
-			
-			$dateList.eq(s.startAt-1).find('a').trigger('click');
-		},100);
+			$dates.css({'-webkit-transition':'-webkit-transform ease '+s.datesSpeed+'ms'});
+		},10);
 
 		defaultPositionDates = c.dates[attr]/2-c.container[attr]/2;
+		$dateList.eq(s.startAt-1).find('a').trigger('click');
 	}
 
 	function getTransform(number){
@@ -89,7 +84,9 @@ $.fn.timelinr = function(options){
 	$dates.find('a').on('click',function(event){
 		event.preventDefault();
 		var $this = $(this);
-
+		if ($this.parent().hasClass(s.selectedClass)) {
+			return ;
+		};
 		// first vars
 		var whichIssue = this.dataset.target || this.text();
 
@@ -98,18 +95,18 @@ $.fn.timelinr = function(options){
 
 		$issues.css(getTransform(-c.issueList[attr]*currentIndex));
 		$issueList.css({'opacity':s.issuesTransparency})
-					.removeClass(s.issuesSelectedClass)
+					.removeClass(s.selectedClass)
 					.eq(currentIndex)
-						.addClass(s.issuesSelectedClass)
+						.addClass(s.selectedClass)
 						.fadeTo(s.issuesTransparencySpeed,1);
 		
 		// now moving the dates
-		$dateList.removeClass(s.datesSelectedClass);
-		$this.parent().addClass(s.datesSelectedClass);
+		$dateList.removeClass(s.selectedClass);
+		$this.parent().addClass(s.selectedClass);
 		$dates.css(getTransform(defaultPositionDates - (c.dateList[attr]*currentIndex)));
 	
 	});
-	$container.find('a.button').on('click',function(event){
+	$container.find('.button').on('click',function(event){
 		event.preventDefault();
 		event.stopPropagation();
 		var action = this.dataset.action;
@@ -129,7 +126,6 @@ $.fn.timelinr = function(options){
 	
 	
 	init();
-	
 };
 })($);
 
